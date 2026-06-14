@@ -1,18 +1,18 @@
-json
 {
   "schemaVersion": 1,
   "id": "speedmod",
   "version": "1.0.0",
   "name": "Speed Mod",
-  "description": "",
-  "authors": [],
+  "description": "Speed boost mod for Fabric 1.21.4",
+  "authors": ["YourName"],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
     "main": ["com.example.speed.SpeedMod"]
   },
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": "1.21.4"
+    "fabricloader": ">=0.16.9",
+    "minecraft": "1.21.4",
+    "java": ">=21"
   }
 }
