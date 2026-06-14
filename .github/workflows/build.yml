@@ -1,27 +1,44 @@
-yaml
-name: Build
+# Файл: ggg/.github/workflows/build.yml
+name: Build Speed Mod (Fabric 1.21.4)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
         with:
+          distribution: 'microsoft'
           java-version: '21'
-          distribution: 'temurin'
-      - name: Setup Gradle 8.8
-        uses: gradle/actions/setup-gradle@v3
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
         with:
-          gradle-version: '8.8'
-      - name: Build
-        run: gradle build
-      - uses: actions/upload-artifact@v4
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build mod
+        run: ./gradlew clean build --no-daemon
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: speed-mod
+          name: speed-mod-fabric-1.21.4
           path: build/libs/*.jar
